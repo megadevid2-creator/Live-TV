@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cinema TV</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            background: #0f0f1b; 
+            color: white; 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+        }
+
+        .header { padding: 20px; font-size: 24px; font-weight: 600; color: #00d2ff; }
+
+        /* பிரதான கட்டமைப்பு */
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 95%;
+            max-width: 1200px;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* வீடியோ பகுதி */
+        .video-section {
+            flex: 2;
+            min-width: 320px;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
+
+        video { width: 100%; display: block; aspect-ratio: 16/9; }
+
+        /* சேனல் லிஸ்ட் பகுதி */
+        .channel-list {
+            flex: 1;
+            min-width: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+            background: #1a1a2e;
+            border-radius: 15px;
+            padding: 10px;
+            border: 1px solid #333;
+        }
+
+        .channel-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #16213e;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .channel-item:hover { background: #0f3460; border-color: #00d2ff; }
+        .channel-item.active { background: #00d2ff; color: #000; }
+
+        .channel-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            margin-right: 15px;
+            object-fit: contain;
+            background: white;
+        }
+
+        .channel-name { font-weight: 600; font-size: 14px; }
+
+        /* Scrollbar ஸ்டைல் */
+        .channel-list::-webkit-scrollbar { width: 5px; }
+        .channel-list::-webkit-scrollbar-thumb { background: #00d2ff; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">MY LIVE TV</div>
+
+    <div class="main-container">
+        <div class="video-section">
+            <video id="video" controls autoplay playsinline></video>
+        </div>
+
+        <div class="channel-list" id="playlist">
+            </div>
+    </div>
+
+    <script>
+        // சேனல் விபரங்கள் (இங்கே நீங்கள் புதிய சேனல்களைச் சேர்க்கலாம்)
+        const channels = [
+            {
+                name: "Star Vijay HD",
+                logo: "http://b1gchlogos.xyz/wp-content/uploads/2023/08/Star-Vijay-HD.png",
+                url: "https://allinonereborn.xyz/airteltv-web/live3.php?id=598757"
+            },
+            {
+                name: "Sun TV HD",
+                logo: "http://b1gchlogos.xyz/wp-content/uploads/2023/08/Sun-TV-HD.png",
+                url: "https://allinonereborn.xyz/airteltv-web/live3.php?id=598758"
+            },
+            {
+                name: "Zee Tamil HD",
+                logo: "http://b1gchlogos.xyz/wp-content/uploads/2023/08/Zee-Tamil-HD.png",
+                url: "https://allinonereborn.xyz/airteltv-web/live3.php?id=598757"
+            }
+        ];
+
+        var video = document.getElementById('video');
+        var hls = new Hls();
+
+        // சேனலை இயக்கும் Function
+        function playChannel(url, element) {
+            // ஆக்டிவ் கிளாஸை மாற்றுதல்
+            document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            if (Hls.isSupported()) {
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+                video.play();
+            }
+        }
+
+        // லிஸ்டை உருவாக்குதல்
+        const playlist = document.getElementById('playlist');
+        channels.forEach((ch, index) => {
+            const item = document.createElement('div');
+            item.className = 'channel-item';
+            if(index === 0) item.className += ' active';
+            
+            item.innerHTML = `
+                <img src="${ch.logo}" alt="${ch.name}">
+                <div class="channel-name">${ch.name}</div>
+            `;
+            
+            item.onclick = () => playChannel(ch.url, item);
+            playlist.appendChild(item);
+        });
+
+        // ஆரம்பத்தில் முதல் சேனலை இயக்கு
+        playChannel(channels[0].url, document.querySelector('.channel-item'));
+    </script>
+</body>
+</html>
