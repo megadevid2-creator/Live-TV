@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Cinema TV</title>
-    <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
+    
+    <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
     <style>
         body { 
-            /* Darken Gradient Blue Background as requested */
             background: linear-gradient(180deg, #0a192f 0%, #020c1b 100%);
             color: white; 
             font-family: 'Poppins', sans-serif; 
@@ -27,47 +28,56 @@
             text-transform: uppercase;
         }
 
-        /* Player Wrapper - Screenshot style */
         .video-holder {
             position: relative;
             width: 92%;
-            max-width: 600px;
+            max-width: 850px; /* பிளேயர் அகலத்தை கொஞ்சம் கூட்டியுள்ளேன் */
             aspect-ratio: 16/9;
             background: #000;
             border-radius: 15px;
             overflow: hidden;
-            padding: 4px;
-            background: linear-gradient(145deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 15px rgba(255,255,255,0.1);
             margin-bottom: 25px;
         }
 
-         .video-js {
-            border-radius: 12px !important;
+        /* Video.js UI Fix for Quality Button */
+        .video-js {
+            width: 100% !important;
+            height: auto !important;
+            aspect-ratio: 16 / 9;
+            border-radius: 12px;
             overflow: hidden;
         }
 
+        .vjs-quality-selector {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
 
-
-        /* Small Live Badge Overlay */
         .live-badge {
             position: absolute;
-            top: 12px;
-            left: 12px;
+            top: 20px;
+            left: 20px;
             background: #ff0000;
             color: white;
-            padding: 2px 7px;
+            padding: 3px 10px;
             border-radius: 4px;
             font-size: 10px;
             font-weight: bold;
             z-index: 10;
             box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
             animation: blink 1.5s infinite;
+            pointer-events: none;
         }
 
-       @keyframes blink { 50% { opacity: 0.6; } }
+        @keyframes blink { 50% { opacity: 0.6; } }
 
-        /* Channel Grid - Side by side (2 per row) */
+        /* Channel Grid */
         .channel-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -89,9 +99,8 @@
             transition: 0.3s;
         }
 
-        /* Active Channel UI */
         .channel-card.active {
-            border-color: #007bff;
+            border-color: #007bff; /* உங்கள் தீம் கலர் */
             background: rgba(0, 123, 255, 0.15);
         }
 
@@ -119,9 +128,6 @@
             color: #f1f1f1;
             text-align: center;
         }
-
-        /* Customizing Video.js controls to look like your screenshot */
-        .video-js { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
@@ -130,33 +136,38 @@
 
     <div class="video-holder">
         <div class="live-badge">LIVE</div>
-        <video id="my-video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" data-setup='{}'>
-        </video>
+        <video id="my-video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto"></video>
     </div>
 
-    <div class="channel-grid" id="playlist">
-        </div>
+    <div class="channel-grid" id="playlist"></div>
 
-    <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+    <script src="https://vjs.zencdn.net/8.3.0/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@4.0.0/dist/videojs-contrib-quality-levels.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@2.0.0/dist/videojs-hls-quality-selector.min.js"></script>
 
     <script>
         const channels = [
             {
                 name: "Jaya TV HD",
                 logo: "http://b1gchlogos.xyz/wp-content/uploads/2023/08/Jaya-TV-HD.png",
-                url: "http://olxi0fko.ukminlt.fun/iptv/HV7NY9RSQCHYZK/6696/index.m3u8"
+                url: "https://allinonereborn.xyz/airteltv-web/live3.php?id=277086"
             },
             {
                 name: "KTV HD",
                 logo: "http://b1gchlogos.xyz/wp-content/uploads/2023/08/KTV-HD.png",
-                url: "http://olxi0fko.ukminlt.fun/iptv/HV7NY9RSQCHYZK/6693/index.m3u8"
+                url: "https://allinonereborn.xyz/airteltv-web/live3.php?id=277087"
             },
             {
                 name: "Sun TV HD",
                 logo: "http://b1gchlogos.xyz/wp-content/uploads/2023/08/Sun-TV-HD.png",
-                url: "http://olxi0fko.ukminlt.fun/iptv/HV7NY9RSQCHYZK/6692/index.m3u8"
+                url: "https://allinonereborn.xyz/airteltv-web/live3.php?id=598758"
             },
             {
+                name: "Sun Music HD",
+                logo: "https://jiotvimages.cdn.jio.com/dare_images/images/Sun_Music_HD.png",
+                url: "https://allinonereborn.xyz/airteltv-web/live3.php?id=277096"
+           },     
+           {    
                 name: "Zee Tamil HD",
                 logo: "http://b1gchlogos.xyz/wp-content/uploads/2023/08/Zee-Tamil-HD.png",
                 url: "https://allinonereborn.xyz/airteltv-web/live3.php?id=598757"
@@ -168,15 +179,24 @@
             }
         ];
 
-        var player = videojs('my-video');
+        // Player Initialization with Quality Selector
+        var player = videojs('my-video', {
+            liveui: true,
+            fluid: true,
+            responsive: true
+        });
+
+        player.hlsQualitySelector({ displayCurrentQuality: true });
 
         function playChannel(url, element) {
             document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
             element.classList.add('active');
 
+            let type = url.includes(".mpd") ? 'application/dash+xml' : 'application/x-mpegURL';
+
             player.src({
                 src: url,
-                type: 'application/x-mpegURL'
+                type: type
             });
             player.play();
         }
